@@ -5,6 +5,7 @@ const geo = require('../middleware/geo');
 const postController = require('../controller/postController');
 
 router.post('/', auth, postController.createPost);
-router.get('/nearby', auth, geo, postController.getNearbyPosts);
-
+router.get('/', postController.getAllPosts);
+router.get('/:id', postController.getPostById);
+router.post('/nearby', auth, postController.getNearbyPosts); 
 module.exports = router;

@@ -1,9 +1,8 @@
 const Poll = require('../model/poll');
 const Post = require('../model/post');
 
-exports.createPoll = async (req, res) => {
+module.exports.createPoll = async (req, res) => {
   const { question, options, postId } = req.body;
-
   try {
     const newPoll = new Poll({
       question,
@@ -12,31 +11,42 @@ exports.createPoll = async (req, res) => {
     });
     const poll = await newPoll.save();
     await Post.findByIdAndUpdate(postId, { poll: poll._id });
-    res.json(poll);
+    res.status(201).json({
+      message: 'Poll created and linked to post successfully',
+      poll
+    });
   } catch (err) {
     console.error(err.message);
-    res.status(500).send('Server error');
+    res.status(500).json({ message: 'Server error while creating poll' });
   }
 };
 
-
-exports.votePoll = async (req, res) => {
+module.exports.votePoll = async (req, res) => {
   const { pollId, optionIndex } = req.body;
   try {
     const poll = await Poll.findById(pollId);
-    if (!poll) return res.status(404).json({ msg: 'Poll not found' });
-    
-    if (poll.voters.includes(req.user.id)) {
-      return res.status(400).json({ msg: 'Already voted' });
+    if (!poll) {
+      return res.status(404).json({ message: 'Poll not found' });
     }
-    
+    if (
+      typeof optionIndex !== 'number' ||
+      optionIndex < 0 ||
+      optionIndex >= poll.options.length
+    ) {
+      return res.status(400).json({ message: 'Invalid option index' });
+    }
+    if (poll.voters.includes(req.user.id)) {
+      return res.status(400).json({ message: 'You have already voted' });
+    }
     poll.options[optionIndex].votes += 1;
     poll.voters.push(req.user.id);
-    
     await poll.save();
-    res.json(poll);
+    res.json({
+      message: 'Vote registered successfully',
+      poll
+    });
   } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server error');
+    console.error('Vote Poll Error:',err.message);
+    res.status(500).json({ message: 'Server error while voting' });
   }
 };
