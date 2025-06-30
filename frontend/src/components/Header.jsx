@@ -3,7 +3,7 @@ import { Search, Bell, User, Menu, X, LogOut, Shield } from 'lucide-react';
 import { useDebounce } from '../hooks/useDebounce';
 import './Header.css';
 
-const Header = ({ user, notifications, onLogout, onToggleAdmin, showAdminToggle }) => {
+const Header = ({ user, notifications, onLogout, onToggleAdmin, showAdminToggle , posts }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
@@ -12,24 +12,39 @@ const Header = ({ user, notifications, onLogout, onToggleAdmin, showAdminToggle 
   
   const debouncedSearchQuery = useDebounce(searchQuery, 300);
 
-  useEffect(() => {
-    if (debouncedSearchQuery.length > 2) {
-      const mockResults = [
-        { type: 'community', name: 'Food & Dining', id: 'food-dining' },
-        { type: 'post', title: 'New coffee shop opening...', id: 'post1' },
-        { type: 'user', name: 'CoffeeEnthusiast92', id: 'user2' }
-      ].filter(item => 
-        item.name?.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
-        item.title?.toLowerCase().includes(debouncedSearchQuery.toLowerCase())
-      );
-      
-      setSearchResults(mockResults);
-      setShowSearchResults(true);
-    } else {
-      setShowSearchResults(false);
-      setSearchResults([]);
-    }
-  }, [debouncedSearchQuery]);
+useEffect(() => {
+  if (debouncedSearchQuery.length > 2 && posts?.length > 0) {
+    const dynamicResults = posts.flatMap(post => [
+      {
+        type: 'post',
+        title: post.title,
+        id: post._id
+      },
+      {
+        type: 'community',
+        name: post.group?.name || 'Unknown Community',
+        id: post.group?._id || 'unknown'
+      },
+      {
+        type: 'user',
+        name: post.author?.username || 'Anonymous',
+        id: post.author?._id || 'anon'
+      }
+    ]);
+
+    const filtered = dynamicResults.filter(item =>
+      item.title?.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
+      item.name?.toLowerCase().includes(debouncedSearchQuery.toLowerCase())
+    );
+
+    setSearchResults(filtered);
+    setShowSearchResults(true);
+  } else {
+    setShowSearchResults(false);
+    setSearchResults([]);
+  }
+}, [debouncedSearchQuery, posts]);
+
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -75,25 +90,27 @@ const Header = ({ user, notifications, onLogout, onToggleAdmin, showAdminToggle 
           {showSearchResults && searchResults.length > 0 && (
             <div className="search-results">
               {searchResults.map((result, index) => (
-                <div key={index} className="search-result-item">
+                <div
+                  key={index}
+                  className="search-result-item"
+                  onClick={() => {
+                    if (result.type === 'post') {
+                      window.location.href = `/posts/${result.id}`;
+                    }
+                  }}
+                >
                   <span className="result-type">{result.type}</span>
                   <span className="result-name">
                     {result.name || result.title}
                   </span>
                 </div>
               ))}
+
             </div>
           )}
         </div>
 
-        <div className="header-right">
-          <button className="notification-btn">
-            <Bell size={20} />
-            {notifications > 0 && (
-              <span className="notification-badge">{notifications}</span>
-            )}
-          </button>
-          
+        <div className="header-right">      
           <div className="user-menu-container">
             <div 
               className="user-menu"

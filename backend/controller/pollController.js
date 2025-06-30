@@ -50,3 +50,18 @@ module.exports.votePoll = async (req, res) => {
     res.status(500).json({ message: 'Server error while voting' });
   }
 };
+
+module.exports.getPollByPostId = async (req, res) => {
+  try {
+    const postId = req.params.postId;
+    const post = await Post.findById(postId).populate('poll');
+    if (!post || !post.poll) {
+      return res.status(404).json({ message: 'Poll not found for this post' });
+    }
+    res.status(200).json({ poll: post.poll });
+  } catch (err) {
+    console.error('Fetch poll error:', err.message);
+    res.status(500).json({ message: 'Server error while fetching poll' });
+  }
+};
+

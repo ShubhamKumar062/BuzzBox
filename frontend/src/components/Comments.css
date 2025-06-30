@@ -21,6 +21,7 @@
   resize: vertical;
   margin-bottom: 0.75rem;
   font-family: inherit;
+  background: rgba(245, 245, 245, 0.321);
 }
 
 .comment-form-actions {
@@ -148,7 +149,7 @@
 .reply-form {
   margin-top: 0.75rem;
   padding: 0.75rem;
-  background: white;
+  background: rgba(173, 216, 230, 0.565);
   border-radius: 6px;
   border: 1px solid var(--gray-200);
 }
@@ -159,6 +160,7 @@
   margin-bottom: 0.5rem;
   font-size: 0.85rem;
   font-family: inherit;
+  background: rgba(211, 211, 211, 0.753);
 }
 
 .reply-actions {

@@ -4,7 +4,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: url("https://cdn.futura-sciences.com/buildsv6/images/largeoriginal/9/b/9/9b99fc0d24_50202401_ai-creation.jpg");
   display: flex;
   align-items: center;
   justify-content: center;
@@ -14,7 +14,7 @@
 
 .create-post-modal {
   background: white;
-  border-radius: 12px;
+  border-radius: 15px;
   width: 100%;
   max-width: 600px;
   max-height: 90vh;
@@ -44,7 +44,7 @@
 .create-post-header h2 {
   font-size: 1.25rem;
   font-weight: 600;
-  color: var(--gray-800);
+  color: red;
   margin: 0;
 }
 
@@ -232,4 +232,25 @@
     border-radius: 0;
     max-height: 100vh;
   }
+}
+.poll-option {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.poll-option input {
+  flex: 1;
+}
+.remove-option {
+  background: transparent;
+  border: none;
+  color: red;
+  cursor: pointer;
+}
+.add-option {
+  margin-top: 6px;
+  background: #eee;
+  border: none;
+  padding: 4px 10px;
+  cursor: pointer;
 }

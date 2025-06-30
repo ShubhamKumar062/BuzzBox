@@ -1,15 +1,16 @@
-import { useState } from 'react';
-import { Eye, EyeOff, Mail, Lock, User, ArrowRight } from 'lucide-react';
-import api from '../../utils/axiosInstance';
-import './Auth.css';
+import { useState } from "react";
+import { useAuth } from "../../context/AuthContext";
+import { Eye, EyeOff, Mail, Lock, User, ArrowRight } from "lucide-react";
+import "./Auth.css";
 
-const Signup = ({ onSignup, onSwitchToLogin }) => {
+const Signup = ({ onSwitchToLogin }) => {
+  const { signup } = useAuth();
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    role: 'user'
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    role: "user",
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -18,17 +19,19 @@ const Signup = ({ onSignup, onSwitchToLogin }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-    if (errors[name]) setErrors(prev => ({ ...prev, [name]: '' }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    if (errors[name]) setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
   const validateForm = () => {
     const newErrors = {};
-    if (!formData.name.trim()) newErrors.name = 'Name is required';
-    if (!formData.email) newErrors.email = 'Email is required';
-    else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Invalid email';
-    if (!formData.password) newErrors.password = 'Password is required';
-    if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = 'Passwords do not match';
+    if (!formData.name.trim()) newErrors.name = "Name is required";
+    if (!formData.email) newErrors.email = "Email is required";
+    else if (!/\S+@\S+\.\S+/.test(formData.email))
+      newErrors.email = "Invalid email";
+    if (!formData.password) newErrors.password = "Password is required";
+    if (formData.password !== formData.confirmPassword)
+      newErrors.confirmPassword = "Passwords do not match";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -38,23 +41,18 @@ const Signup = ({ onSignup, onSwitchToLogin }) => {
     if (!validateForm()) return;
     setIsLoading(true);
 
-    try {
-      const res = await api.post('/auth/register', {
-        username: formData.name.trim(), 
-        email: formData.email,
-        password: formData.password,
-        role: formData.role
-      });
+    const res = await signup({
+      username: formData.name.trim(),
+      email: formData.email,
+      password: formData.password,
+      role: formData.role,
+    });
 
-      const { user, token } = res.data;
-      localStorage.setItem('token', token);
-      onSignup(user);
-    } catch (err) {
-      const msg = err?.response?.data?.message || 'Signup failed';
-      setErrors({ general: msg });
-    } finally {
-      setIsLoading(false);
+    if (!res.success) {
+      setErrors({ general: res.error });  
     }
+
+    setIsLoading(false);
   };
 
   return (
@@ -66,7 +64,9 @@ const Signup = ({ onSignup, onSwitchToLogin }) => {
         </div>
 
         <form onSubmit={handleSubmit} className="auth-form">
-          {errors.general && <div className="error-message">{errors.general}</div>}
+          {errors.general && (
+            <div className="error-message">{errors.general}</div>
+          )}
 
           <div className="form-group">
             <label>Full Name</label>
@@ -78,10 +78,12 @@ const Signup = ({ onSignup, onSwitchToLogin }) => {
                 value={formData.name}
                 onChange={handleChange}
                 placeholder="Enter your full name"
-                className={errors.name ? 'error' : ''}
+                className={errors.name ? "error" : ""}
               />
             </div>
-            {errors.name && <span className="error-message">{errors.name}</span>}
+            {errors.name && (
+              <span className="error-message">{errors.name}</span>
+            )}
           </div>
 
           <div className="form-group">
@@ -94,10 +96,12 @@ const Signup = ({ onSignup, onSwitchToLogin }) => {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="Enter your email"
-                className={errors.email ? 'error' : ''}
+                className={errors.email ? "error" : ""}
               />
             </div>
-            {errors.email && <span className="error-message">{errors.email}</span>}
+            {errors.email && (
+              <span className="error-message">{errors.email}</span>
+            )}
           </div>
 
           <div className="form-group">
@@ -113,19 +117,24 @@ const Signup = ({ onSignup, onSwitchToLogin }) => {
             <div className="input-wrapper">
               <Lock className="input-icon" />
               <input
-                type={showPassword ? 'text' : 'password'}
+                type={showPassword ? "text" : "password"}
                 name="password"
                 value={formData.password}
-                  autoComplete="new-password"
                 onChange={handleChange}
                 placeholder="Create a password"
-                className={errors.password ? 'error' : ''}
+                className={errors.password ? "error" : ""}
               />
-              <button type="button" onClick={() => setShowPassword(!showPassword)} className="password-toggle">
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="password-toggle"
+              >
                 {showPassword ? <EyeOff /> : <Eye />}
               </button>
             </div>
-            {errors.password && <span className="error-message">{errors.password}</span>}
+            {errors.password && (
+              <span className="error-message">{errors.password}</span>
+            )}
           </div>
 
           <div className="form-group">
@@ -133,28 +142,48 @@ const Signup = ({ onSignup, onSwitchToLogin }) => {
             <div className="input-wrapper">
               <Lock className="input-icon" />
               <input
-                type={showConfirmPassword ? 'text' : 'password'}
+                type={showConfirmPassword ? "text" : "password"}
                 name="confirmPassword"
-                  autoComplete="new-password"
                 value={formData.confirmPassword}
                 onChange={handleChange}
                 placeholder="Confirm your password"
-                className={errors.confirmPassword ? 'error' : ''}
+                className={errors.confirmPassword ? "error" : ""}
               />
-              <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="password-toggle">
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="password-toggle"
+              >
                 {showConfirmPassword ? <EyeOff /> : <Eye />}
               </button>
             </div>
-            {errors.confirmPassword && <span className="error-message">{errors.confirmPassword}</span>}
+            {errors.confirmPassword && (
+              <span className="error-message">{errors.confirmPassword}</span>
+            )}
           </div>
 
-          <button type="submit" className="auth-submit-btn" disabled={isLoading}>
-            {isLoading ? <div className="loading-spinner-small" /> : <>Create Account <ArrowRight /></>}
+          <button
+            type="submit"
+            className="auth-submit-btn"
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <div className="loading-spinner-small" />
+            ) : (
+              <>
+                Create Account <ArrowRight />
+              </>
+            )}
           </button>
         </form>
 
         <div className="auth-footer">
-          <p>Already have an account? <button onClick={onSwitchToLogin} className="auth-link">Sign in here</button></p>
+          <p>
+            Already have an account?{" "}
+            <button onClick={onSwitchToLogin} className="auth-link">
+              Sign in here
+            </button>
+          </p>
         </div>
       </div>
     </div>

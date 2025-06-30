@@ -1,26 +1,27 @@
-import { useState } from 'react';
-import { Eye, EyeOff, Mail, Lock, ArrowRight } from 'lucide-react';
-import api from '../../utils/axiosInstance';
-import './Auth.css';
+import { useState } from "react";
+import { useAuth } from "../../context/AuthContext";
+import { Eye, EyeOff, Mail, Lock, ArrowRight } from "lucide-react";
+import "./Auth.css";
 
-const Login = ({ onLogin, onSwitchToSignup }) => {
-  const [formData, setFormData] = useState({ email: '', password: '' });
+const Login = ({ onSwitchToSignup }) => {
+  const { login } = useAuth();
+  const [formData, setFormData] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-    if (errors[name]) setErrors(prev => ({ ...prev, [name]: '' }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    if (errors[name]) setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
   const validateForm = () => {
     const newErrors = {};
-    if (!formData.email) newErrors.email = 'Email is required';
-    else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Invalid email';
-    if (!formData.password) newErrors.password = 'Password is required';
-    else if (formData.password.length < 6) newErrors.password = 'Minimum 6 characters';
+    if (!formData.email) newErrors.email = "Email is required";
+    else if (!/\S+@\S+\.\S+/.test(formData.email))
+      newErrors.email = "Invalid email";
+    if (!formData.password) newErrors.password = "Password is required";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -30,17 +31,12 @@ const Login = ({ onLogin, onSwitchToSignup }) => {
     if (!validateForm()) return;
     setIsLoading(true);
 
-    try {
-      const res = await api.post('/auth/login', formData);
-      const { user, token } = res.data;
-      localStorage.setItem('token', token);
-      onLogin(user);
-    } catch (err) {
-      const msg = err?.response?.data?.message || 'Login failed';
-      setErrors({ general: msg });
-    } finally {
-      setIsLoading(false);
+    const res = await login(formData);
+    if (!res.success) {
+      setErrors({ general: res.error });
     }
+
+    setIsLoading(false);
   };
 
   return (
@@ -52,7 +48,9 @@ const Login = ({ onLogin, onSwitchToSignup }) => {
         </div>
 
         <form onSubmit={handleSubmit} className="auth-form">
-          {errors.general && <div className="error-message">{errors.general}</div>}
+          {errors.general && (
+            <div className="error-message">{errors.general}</div>
+          )}
 
           <div className="form-group">
             <label>Email</label>
@@ -64,10 +62,12 @@ const Login = ({ onLogin, onSwitchToSignup }) => {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="Enter your email"
-                className={errors.email ? 'error' : ''}
+                className={errors.email ? "error" : ""}
               />
             </div>
-            {errors.email && <span className="error-message">{errors.email}</span>}
+            {errors.email && (
+              <span className="error-message">{errors.email}</span>
+            )}
           </div>
 
           <div className="form-group">
@@ -75,28 +75,48 @@ const Login = ({ onLogin, onSwitchToSignup }) => {
             <div className="input-wrapper">
               <Lock className="input-icon" />
               <input
-                type={showPassword ? 'text' : 'password'}
+                type={showPassword ? "text" : "password"}
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                autoComplete="current-password"
                 placeholder="Enter your password"
-                className={errors.password ? 'error' : ''}
+                className={errors.password ? "error" : ""}
               />
-              <button type="button" onClick={() => setShowPassword(!showPassword)} className="password-toggle">
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="password-toggle"
+              >
                 {showPassword ? <EyeOff /> : <Eye />}
               </button>
             </div>
-            {errors.password && <span className="error-message">{errors.password}</span>}
+            {errors.password && (
+              <span className="error-message">{errors.password}</span>
+            )}
           </div>
 
-          <button type="submit" className="auth-submit-btn" disabled={isLoading}>
-            {isLoading ? <div className="loading-spinner-small" /> : <>Sign In <ArrowRight /></>}
+          <button
+            type="submit"
+            className="auth-submit-btn"
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <div className="loading-spinner-small" />
+            ) : (
+              <>
+                Sign In <ArrowRight />
+              </>
+            )}
           </button>
         </form>
 
         <div className="auth-footer">
-          <p>Don't have an account? <button onClick={onSwitchToSignup} className="auth-link">Sign up here</button></p>
+          <p>
+            Don't have an account?{" "}
+            <button onClick={onSwitchToSignup} className="auth-link">
+              Sign up here
+            </button>
+          </p>
         </div>
       </div>
     </div>

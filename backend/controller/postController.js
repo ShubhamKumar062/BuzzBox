@@ -43,7 +43,8 @@ module.exports.getNearbyPosts = async (req, res) => {
       }
     })
       .populate('author', 'username')
-      .populate('group', 'name');
+      .populate('group', 'name')
+      .populate('poll');
     res.status(200).json({
       message: 'Nearby posts fetched successfully',
       posts
@@ -56,14 +57,14 @@ module.exports.getNearbyPosts = async (req, res) => {
 module.exports.getAllPosts = async (req, res) => {
   try {
     const posts = await Post.find()
-      .sort({ timestamp: -1 })
       .populate('author', 'username')
-      .populate('group', 'name');
+      .populate('group', 'name')
+      .populate('poll'); 
 
-    res.status(200).json({ message: 'All posts fetched', posts });
+    res.status(200).json({ posts });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Failed to fetch posts' });
+    console.error('Error fetching posts:', err);
+    res.status(500).json({ message: 'Server error while fetching posts' });
   }
 };
 
@@ -71,7 +72,8 @@ module.exports.getPostById = async (req, res) => {
   try {
     const post = await Post.findById(req.params.id)
       .populate('author', 'username')
-      .populate('group', 'name');
+      .populate('group', 'name')
+      .populate('poll'); 
     if (!post) {
       return res.status(404).json({ message: 'Post not found' });
     }

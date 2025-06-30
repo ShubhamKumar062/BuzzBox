@@ -21,8 +21,8 @@ const Post = ({ post, onVote, onAddComment, onPollVote, currentUser, userVotes, 
     }
   };
 
-  const formatTime = (timestamp) => {
-    const date = new Date(timestamp);
+  const formatTime = (createdAt) => {
+    const date =  new Date(createdAt);
     const now = new Date();
     const diffInMinutes = Math.floor((now - date) / (1000 * 60));
     
@@ -62,7 +62,7 @@ const Post = ({ post, onVote, onAddComment, onPollVote, currentUser, userVotes, 
               <span className="separator">•</span>
               <span className="timestamp">
                 <Clock size={12} />
-                {formatTime(post.timestamp)}
+                 {formatTime(post.createdAt)}
               </span>
             </div>
             <div className="post-header-actions">

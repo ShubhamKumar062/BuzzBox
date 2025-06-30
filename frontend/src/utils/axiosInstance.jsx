@@ -1,17 +1,20 @@
-import axios from 'axios';
+import axios from "axios";
 
 const api = axios.create({
-  baseURL: 'http://localhost:2030/api', 
-  headers: {
-    'Content-Type': 'application/json',
-  },
+  baseURL: "https://buzzbox-backend.onrender.com",
 });
+api.interceptors.request.use(
+  (config) => {
+    let token = localStorage.getItem('token');
+    if (token?.startsWith('"') && token?.endsWith('"')) {
+      token = token.slice(1, -1); 
+    }
 
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 export default api;

@@ -2,18 +2,8 @@ import { useState, useEffect } from 'react';
 import { MapPin, ChevronDown } from 'lucide-react';
 import './LocationSelector.css';
 
-const LocationSelector = ({ currentLocation, onLocationChange }) => {
+const LocationSelector = ({ currentLocation, onLocationChange, locations, activeUserCount, communityCount }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [locations] = useState([
-    'Downtown NYC',
-    'Brooklyn Heights',
-    'Williamsburg',
-    'East Village',
-    'SoHo',
-    'Upper West Side',
-    'Harlem',
-    'Queens Village'
-  ]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -31,47 +21,50 @@ const LocationSelector = ({ currentLocation, onLocationChange }) => {
     setIsOpen(false);
   };
 
+  const formatLocation = (loc) => {
+    if (!loc) return 'Unknown';
+    if (typeof loc === 'string') return loc;
+    if (typeof loc === 'object') {
+      return loc.coordinates ? `(${loc.coordinates.join(', ')})` : JSON.stringify(loc);
+    }
+    return String(loc);
+  };
+
   return (
     <div className="location-selector card">
       <div className="location-header">
         <MapPin className="location-icon" size={20} />
         <h3>Your Location</h3>
       </div>
-      
+
       <div className="location-dropdown">
-        <button 
-          className="location-btn"
-          onClick={() => setIsOpen(!isOpen)}
-        >
-          <span>{currentLocation}</span>
-          <ChevronDown 
-            className={`chevron ${isOpen ? 'open' : ''}`} 
-            size={16} 
-          />
+        <button className="location-btn" onClick={() => setIsOpen(!isOpen)}>
+          <span>{formatLocation(currentLocation)}</span>
+          <ChevronDown className={`chevron ${isOpen ? 'open' : ''}`} size={16} />
         </button>
-        
+
         {isOpen && (
           <div className="location-menu">
-            {locations.map(location => (
+            {locations?.map((location, index) => (
               <button
-                key={location}
-                className={`location-item ${location === currentLocation ? 'active' : ''}`}
+                key={index}
+                className={`location-item ${JSON.stringify(location) === JSON.stringify(currentLocation) ? 'active' : ''}`}
                 onClick={() => handleLocationSelect(location)}
               >
-                {location}
+                {formatLocation(location)}
               </button>
             ))}
           </div>
         )}
       </div>
-      
+
       <div className="location-stats">
         <div className="stat">
-          <span className="stat-number">127</span>
+          <span className="stat-number">{activeUserCount || 0}</span>
           <span className="stat-label">Active Users</span>
         </div>
         <div className="stat">
-          <span className="stat-number">23</span>
+          <span className="stat-number">{communityCount || 0}</span>
           <span className="stat-label">Communities</span>
         </div>
       </div>

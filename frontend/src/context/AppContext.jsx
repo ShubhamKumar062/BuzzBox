@@ -4,7 +4,7 @@ import api from '../utils/axiosInstance';
 const AppContext = createContext();
 
 const initialState = {
-  currentLocation: 'Downtown NYC',
+  currentLocation: 'Bangalore',
   selectedCommunity: 'all',
   posts: [],
   communities: [],
@@ -18,6 +18,7 @@ const appReducer = (state, action) => {
   switch (action.type) {
     case 'SET_LOADING':
       return { ...state, loading: action.payload };
+
     case 'SET_LOCATION':
       return {
         ...state,
@@ -53,18 +54,17 @@ const appReducer = (state, action) => {
         ),
       };
 
-    case 'ADD_COMMENT':
+    case 'ADD_COMMENT': {
+      const { postId, comment } = action.payload;
       return {
         ...state,
-        posts: state.posts.map((post) =>
-          post.id === action.payload.postId
-            ? {
-                ...post,
-                comments: [...(post.comments || []), action.payload.comment],
-              }
+        posts: state.posts.map(post =>
+          post._id === postId
+            ? { ...post, comments: [...(post.comments || []), comment] }
             : post
-        ),
+        )
       };
+    }
 
     case 'DELETE_COMMENT':
       return {
@@ -127,7 +127,7 @@ const appReducer = (state, action) => {
       return {
         ...state,
         posts: state.posts.map((post) => {
-          if (post.id === action.payload.postId && post.poll) {
+          if (post._id === action.payload.postId && post.poll) {
             const updatedOptions = post.poll.options.map((option, index) =>
               index === action.payload.optionIndex
                 ? { ...option, votes: option.votes + 1 }
@@ -151,8 +151,11 @@ const appReducer = (state, action) => {
   }
 };
 
+
+
 export const AppProvider = ({ children }) => {
   const [state, dispatch] = useReducer(appReducer, initialState);
+
   useEffect(() => {
     const fetchData = async () => {
       dispatch({ type: 'SET_LOADING', payload: true });
@@ -163,8 +166,31 @@ export const AppProvider = ({ children }) => {
           api.get('/posts'),
         ]);
 
+        const posts = postRes.data.posts;
+
+        const enrichedPosts = await Promise.all(
+          posts.map(async (post) => {
+            if (post.type === 'poll') {
+              try {
+                const pollRes = await api.get(`/polls/post/${post._id}`);
+                return {
+                  ...post,
+                  poll: {
+                    ...pollRes.data.poll,
+                    totalVotes: pollRes.data.poll.options.reduce((sum, opt) => sum + opt.votes, 0),
+                  },
+                };
+              } catch (err) {
+                console.error(`Failed to fetch poll for post ${post._id}:`, err.message);
+                return post;
+              }
+            }
+            return post;
+          })
+        );
+
         dispatch({ type: 'SET_COMMUNITIES', payload: groupRes.data.groups });
-        dispatch({ type: 'SET_POSTS', payload: postRes.data.posts });
+        dispatch({ type: 'SET_POSTS', payload: enrichedPosts });
       } catch (err) {
         console.error('AppContext API fetch error:', err.message);
       } finally {
@@ -181,6 +207,7 @@ export const AppProvider = ({ children }) => {
     </AppContext.Provider>
   );
 };
+
 
 export const useApp = () => {
   const context = useContext(AppContext);
