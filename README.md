@@ -1,1 +1,1 @@
-# BuzzBox
+# BuzzBox – Hyperlocal News & Discussion App
