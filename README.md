@@ -138,3 +138,28 @@ BuzzBox is a Reddit-style social platform designed for hyperlocal communities—
 
 **Backend** : buzzbox-backend-1.vercel.app
 
+
+# API Endpoints
+ **Endpoint**	|  **Method**  |	**Description**
+/api/auth/login	|   POST	   |      User authentication
+/api/posts	    |   GET	       |      Location-based posts
+/api/groups	    |   POST	   |      Create community group
+/api/polls	    |   POST	   |      Create new poll
+/admin/posts	|   DELETE	   |      Moderator delete post
+
+# Key Components
+**Geolocation** - LocationSelector.jsx + Google Maps API
+
+**Authentication** - JWT via AuthContext.jsx
+
+**Admin Tools** - AdminPanel.jsx with moderation features
+
+**Optimizations** - useDebounce.js + Axios interceptors
+
+# Contributing
+
+1. Fork the repository
+2. Create your feature branch (git checkout -b feature/AmazingFeature)
+3. Commit changes (git commit -m 'Add feature')
+4. Push to branch (git push origin feature/AmazingFeature)
+5. Open a pull request
