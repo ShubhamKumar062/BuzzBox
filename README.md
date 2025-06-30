@@ -25,6 +25,8 @@ BuzzBox is a Reddit-style social platform designed for hyperlocal communities—
 
 ## Project Structure
 
+# Project Structure
+
 📦 BuzzBox
 ├── 📂 frontend
 │   ├── 📱 src
@@ -59,43 +61,46 @@ BuzzBox is a Reddit-style social platform designed for hyperlocal communities—
 │   │   │   └── 📜 PostDetails.jsx
 │   │   ├── 📂 context
 │   │   │   ├── 📜 AppContext.jsx
-│   │   │   ┗ 📜 AuthContext.jsx
+│   │   │   └── 📜 AuthContext.jsx
 │   │   ├── 📂 hooks
 │   │   │   ├── 📜 useDebounce.js
-│   │   │   ┗ 📜 useLocalStorage.js
+│   │   │   └── 📜 useLocalStorage.js
 │   │   ├── 📂 utils
 │   │   │   ├── 📜 axiosInstance.jsx
-│   │   │   ┗ 📜 mockData.js
+│   │   │   └── 📜 mockData.js
 │   │   ├── 📜 App.css
 │   │   ├── 📜 App.jsx
 │   │   ├── 📜 index.css
-│   │   ┗ 📜 main.jsx
+│   │   └── 📜 main.jsx
 │   ├── 🎨 public
-│   │   ┗ 📜 index.html
+│   │   └── 📜 index.html
 │   ├── 📝 .gitignore
 │   ├── 📝 eslint.config.js
+│   ├── 📝 package-lock.json
 │   ├── 📝 package.json
-│   └── ... (other config files)
+│   ├── 📝 README.md
+│   └── 📝 vite.config.js
 │
 └── 📂 backend
     ├── 🔧 config
-    │   ┗ 📜 db.js
+    │   └── 📜 db.js
     ├── 🎮 controller
     │   ├── 📜 authController.js
     │   ├── 📜 commentController.js
     │   ├── 📜 groupController.js
     │   ├── 📜 modController.js
     │   ├── 📜 pollController.js
-    │   ┗ 📜 postController.js
+    │   └── 📜 postController.js
     ├── 🔒 middleware
     │   ├── 📜 auth.js
-    │   ┗ 📜 geo.js
+    │   └── 📜 geo.js
     ├── 📊 model
     │   ├── 📜 comment.js
     │   ├── 📜 group.js
     │   ├── 📜 poll.js
     │   ├── 📜 post.js
-    │   ┗ 📜 user.js
+    │   └── 📜 user.js
+    ├── 📝 package-lock.json
     ├── 📝 package.json
     └── 🚀 server.js
 
