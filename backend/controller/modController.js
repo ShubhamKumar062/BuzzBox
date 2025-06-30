@@ -59,7 +59,6 @@ module.exports.deletePoll = async (req, res) => {
       return res.status(404).json({ message: "Poll not found" });
     }
 
-    // Optional: Check if the user is admin/mod
     if (req.user.role !== "admin" && req.user.role !== "moderator") {
       return res.status(403).json({ message: "Not authorized to delete poll" });
     }
@@ -67,7 +66,7 @@ module.exports.deletePoll = async (req, res) => {
     await Poll.deleteOne({ _id: pollId });
     res.json({ message: "Poll deleted successfully" });
   } catch (err) {
-    console.error("❌ Poll deletion failed:", err.message);
+    console.error("Poll deletion failed:", err.message);
     res.status(500).json({ message: "Server error while deleting poll" });
   }
 };
