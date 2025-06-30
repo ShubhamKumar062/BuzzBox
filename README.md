@@ -131,5 +131,5 @@ BuzzBox is a Reddit-style social platform designed for hyperlocal communities—
 # Deployment
 **Frontend** : https://creative-hotteok-a0fe87.netlify.app/
 
-**Backend** : Requires separate deployment (Render/Heroku recommended)
+**Backend** : buzzbox-backend-1.vercel.app
 
