@@ -27,16 +27,16 @@ BuzzBox is a Reddit-style social platform designed for hyperlocal communities—
 
 # Project Structure
 
-📦 BuzzBox
-├── 📂 frontend
-│   ├── 📱 src
-│   │   ├── 📂 assets
+📦 BuzzBox/
+├── 📂 frontend/
+│   ├── 📱 src/
+│   │   ├── 📂 assets/
 │   │   │   └── 📜 react.svg
-│   │   ├── 📂 components
-│   │   │   ├── 📂 AdminPanel
+│   │   ├── 📂 components/
+│   │   │   ├── 📂 AdminPanel/
 │   │   │   │   ├── 📜 AdminPanel.css
 │   │   │   │   └── 📜 AdminPanel.jsx
-│   │   │   ├── 📂 Auth
+│   │   │   ├── 📂 Auth/
 │   │   │   │   ├── 📜 Auth.css
 │   │   │   │   ├── 📜 Login.jsx
 │   │   │   │   └── 📜 Signup.jsx
@@ -59,20 +59,20 @@ BuzzBox is a Reddit-style social platform designed for hyperlocal communities—
 │   │   │   ├── 📜 Post.jsx
 │   │   │   ├── 📜 PostDetails.css
 │   │   │   └── 📜 PostDetails.jsx
-│   │   ├── 📂 context
+│   │   ├── 📂 context/
 │   │   │   ├── 📜 AppContext.jsx
 │   │   │   └── 📜 AuthContext.jsx
-│   │   ├── 📂 hooks
+│   │   ├── 📂 hooks/
 │   │   │   ├── 📜 useDebounce.js
 │   │   │   └── 📜 useLocalStorage.js
-│   │   ├── 📂 utils
+│   │   ├── 📂 utils/
 │   │   │   ├── 📜 axiosInstance.jsx
 │   │   │   └── 📜 mockData.js
 │   │   ├── 📜 App.css
 │   │   ├── 📜 App.jsx
 │   │   ├── 📜 index.css
 │   │   └── 📜 main.jsx
-│   ├── 🎨 public
+│   ├── 🎨 public/
 │   │   └── 📜 index.html
 │   ├── 📝 .gitignore
 │   ├── 📝 eslint.config.js
@@ -81,20 +81,20 @@ BuzzBox is a Reddit-style social platform designed for hyperlocal communities—
 │   ├── 📝 README.md
 │   └── 📝 vite.config.js
 │
-└── 📂 backend
-    ├── 🔧 config
+└── 📂 backend/
+    ├── 🔧 config/
     │   └── 📜 db.js
-    ├── 🎮 controller
+    ├── 🎮 controller/
     │   ├── 📜 authController.js
     │   ├── 📜 commentController.js
     │   ├── 📜 groupController.js
     │   ├── 📜 modController.js
     │   ├── 📜 pollController.js
     │   └── 📜 postController.js
-    ├── 🔒 middleware
+    ├── 🔒 middleware/
     │   ├── 📜 auth.js
     │   └── 📜 geo.js
-    ├── 📊 model
+    ├── 📊 model/
     │   ├── 📜 comment.js
     │   ├── 📜 group.js
     │   ├── 📜 poll.js
