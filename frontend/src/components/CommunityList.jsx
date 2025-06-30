@@ -22,7 +22,26 @@ const CommunityList = ({ communities, selectedCommunity, onCommunitySelect }) =>
     <div className="community-list card">
       <div className="community-header">
         <h3>Communities</h3>
-      
+        <div className="sort-controls">
+          <button
+            className={`sort-btn ${sortBy === 'members' ? 'active' : ''}`}
+            onClick={() => setSortBy('members')}
+          >
+            <Users size={14} />
+          </button>
+          <button
+            className={`sort-btn ${sortBy === 'activity' ? 'active' : ''}`}
+            onClick={() => setSortBy('activity')}
+          >
+            <TrendingUp size={14} />
+          </button>
+          <button
+            className={`sort-btn ${sortBy === 'recent' ? 'active' : ''}`}
+            onClick={() => setSortBy('recent')}
+          >
+            <Clock size={14} />
+          </button>
+        </div>
       </div>
 
       <div className="community-item-container">

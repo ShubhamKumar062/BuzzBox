@@ -59,7 +59,7 @@ module.exports.getAllPosts = async (req, res) => {
     const posts = await Post.find()
       .populate('author', 'username')
       .populate('group', 'name')
-      .populate('poll'); 
+      .populate('poll'); // ✅ Important for poll display
 
     res.status(200).json({ posts });
   } catch (err) {

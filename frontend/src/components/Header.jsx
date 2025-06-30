@@ -110,7 +110,14 @@ useEffect(() => {
           )}
         </div>
 
-        <div className="header-right">      
+        <div className="header-right">
+          <button className="notification-btn">
+            <Bell size={20} />
+            {notifications > 0 && (
+              <span className="notification-badge">{notifications}</span>
+            )}
+          </button>
+          
           <div className="user-menu-container">
             <div 
               className="user-menu"
@@ -166,6 +173,7 @@ useEffect(() => {
               <button className="mobile-nav-item admin-item" onClick={onToggleAdmin}>
                 <Shield size={16} />
                 Admin Panel
+              
               </button>
             )}
             <button className="mobile-nav-item logout-item" onClick={onLogout}>

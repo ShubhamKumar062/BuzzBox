@@ -1,8 +1,9 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://buzzbox-backend.onrender.com",
+  baseURL: "http://localhost:2030/api",
 });
+
 api.interceptors.request.use(
   (config) => {
     let token = localStorage.getItem('token');
@@ -13,8 +14,11 @@ api.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+
     return config;
   },
   (error) => Promise.reject(error)
 );
+
+
 export default api;

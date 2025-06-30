@@ -44,6 +44,8 @@ const CreatePost = ({ onCreatePost, onCancel }) => {
           type: "Point",
           coordinates: [coords.longitude, coords.latitude],
         };
+        console.log("📍 [Location] Fetched:", loc);
+
         setLocation(loc);
       },
       () => {
@@ -51,6 +53,8 @@ const CreatePost = ({ onCreatePost, onCancel }) => {
           type: "Point",
           coordinates: [77.1025, 28.7041],
         };
+        console.log("📍 [Location] Fallback:", fallbackLoc);
+
         setLocation(fallbackLoc);
       }
     );
@@ -91,6 +95,12 @@ const CreatePost = ({ onCreatePost, onCancel }) => {
     if (postType === "text") {
       payload.content = content.trim();
     }
+
+    console.log("📤 [Submit] Payload:", payload);
+    console.log(
+      "🔐 [Submit] Token in localStorage:",
+      localStorage.getItem("token")
+    );
 
     try {
       const res = await api.post("/posts", payload);

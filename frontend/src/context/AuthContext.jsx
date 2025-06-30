@@ -3,6 +3,7 @@ import api from "../utils/axiosInstance";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 
 const AuthContext = createContext();
+
 const initialState = {
   user: null,
   isAuthenticated: false,
@@ -51,8 +52,11 @@ export const AuthProvider = ({ children }) => {
     try {
       const res = await api.post("/auth/login", credentials);
       const { user, token } = res.data;
+
       localStorage.setItem("token", token);
       setStoredToken(token);
+      
+
 
       dispatch({ type: "LOGIN_SUCCESS", payload: user });
       return { success: true };
@@ -72,6 +76,7 @@ export const AuthProvider = ({ children }) => {
 
       localStorage.setItem("token", token);
       setStoredToken(token);
+    
       dispatch({ type: "SIGNUP_SUCCESS", payload: user });
       return { success: true };
     } catch (error) {

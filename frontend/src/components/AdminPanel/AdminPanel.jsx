@@ -86,6 +86,7 @@ const AdminPanel = ({ currentUser }) => {
                 <button onClick={() => deletePost(post._id)}>🗑️ Delete Post</button>
                 {post.poll && (
                   <button onClick={() => deletePoll(post.poll._id)}>🗑️ Delete Poll</button>
+
                 )}
               </div>
 

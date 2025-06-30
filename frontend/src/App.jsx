@@ -164,7 +164,7 @@ function App() {
           user={user}
           notifications={state.notifications}
           onLogout={logout}
-          onToggleAdmin={() => setShowAdminPanel(!showAdminPanel)}
+          onToggleAdmin={() => setShowAdminPanel((prev)=>!prev)}
           showAdminToggle={user.role === "admin"}
           posts={filteredPosts}
         />
@@ -215,7 +215,7 @@ function App() {
                                 }`}
                           </h2>
                           <div style={{ display: "flex", gap: "10px" }}>
-                            {/* Create Post */}
+                          
                             <button
                               onClick={async () => {
                                 setPostType("text");
@@ -231,6 +231,22 @@ function App() {
                               Create Post
                             </button>
 
+                            {/* Create Poll */}
+                            {/* <button
+                              onClick={async () => {
+                                setPostType("poll");
+                                const res = await api.get("/posts");
+                                dispatch({
+                                  type: "SET_POSTS",
+                                  payload: res.data.posts,
+                                });
+                                setShowCreatePost(true);
+                              }}
+                              className="create-post-btn gradient-bg"
+                            >
+                              Create Poll
+                            </button> */}
+
                             <button
                               onClick={() => setShowCreateGroup(true)}
                               className="create-post-btn gradient-bg"
@@ -239,6 +255,7 @@ function App() {
                             </button>
                           </div>
                         </div>
+
                         {showCreatePost && (
                           <CreatePost
                             communities={
@@ -252,7 +269,6 @@ function App() {
                           />
                         )}
 
-                 
                         {showCreateGroup && (
                           <CreateGroup
                             onGroupCreated={handleCreateGroup}
