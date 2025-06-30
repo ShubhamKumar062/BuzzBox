@@ -25,8 +25,6 @@ BuzzBox is a Reddit-style social platform designed for hyperlocal communities—
 
 ## Project Structure
 
-# Project Structure
-
 📦 BuzzBox/
 ├── 📂 frontend/
 │   ├── 📱 src/
