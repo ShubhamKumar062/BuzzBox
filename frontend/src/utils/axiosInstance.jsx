@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:2030/api",
+  baseURL: "https://buzzbox-backend-1.onrender.com/api",
 });
 
 api.interceptors.request.use(
